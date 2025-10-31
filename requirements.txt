@@ -1,0 +1,12 @@
+numpy
+torch
+gymnasium
+matplotlib
+seaborn
+plotly
+stable-baselines3
+pandas
+tqdm
+tensorboard
+jupyter
+pytest
