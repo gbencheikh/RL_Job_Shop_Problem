@@ -23,11 +23,11 @@ Solution optimale : Makespan = 7h
 
 ## 🎯 Objectifs du Projet
 
-1. ✅ Créer un environnement Gymnasium compatible pour Job Shop
-2. ✅ Implémenter des agents RL (DQN, PPO)
-3. ✅ Visualiser les solutions avec des diagrammes de Gantt
-4. ✅ Tester sur des benchmarks classiques (FT06, FT10, etc.)
-5. ✅ Comparer avec des heuristiques classiques
+1. [x] Créer un environnement Gymnasium compatible pour Job Shop
+2. [x] Implémenter l'agent RL : DQN
+3. [x] Visualiser les solutions avec des diagrammes de Gantt
+4. [ ] Tester sur des benchmarks classiques (FT06, FT10, etc.)
+5. [ ] Comparer avec des heuristiques classiques
 
 ## 🛠️ Technologies
 
@@ -41,12 +41,11 @@ Solution optimale : Makespan = 7h
 ```
 job-shop-rl/
 ├── src/
-│   ├── environment/       # Environnement Job Shop
-│   ├── agents/           # Agents RL (DQN, PPO)
+│   ├── environment/      # Environnement Job Shop
+│   ├── agents/           # Agents RL (Heuristic, DQN, PPO)
 │   ├── utils/            # Visualisation, logging
 │   └── models/           # Architectures de réseaux
 ├── examples/             # Scripts d'entraînement
-├── data/instances/       # Instances de test
 └── results/              # Modèles et résultats
 ```
 
@@ -69,7 +68,7 @@ pip install -r requirements.txt
 
 ### Entraîner un agent sur une instance simple
 ```bash
-python examples/train_simple.py
+python examples/train_DQN_agent.py
 ```
 
 ### Entraîner sur des benchmarks

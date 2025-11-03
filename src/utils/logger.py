@@ -1,4 +1,3 @@
-# src/utils/logger.py
 """
 Logger minimal : console + fichier optionnel.
 """

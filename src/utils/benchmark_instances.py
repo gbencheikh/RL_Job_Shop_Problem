@@ -1,4 +1,3 @@
-# src/utils/benchmark_instances.py
 """
 Utilitaires pour créer et charger des instances de job-shop.
 """
