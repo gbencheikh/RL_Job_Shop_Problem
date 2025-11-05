@@ -26,8 +26,8 @@ Solution optimale : Makespan = 7h
 1. [x] Créer un environnement Gymnasium compatible pour Job Shop
 2. [x] Implémenter l'agent RL : DQN
 3. [x] Visualiser les solutions avec des diagrammes de Gantt
-4. [ ] Tester sur des benchmarks classiques (FT06, FT10, etc.)
-5. [ ] Comparer avec des heuristiques classiques
+4. [x] Tester sur des benchmarks classiques (FT06, FT10, etc.)
+5. [x] Comparer avec des heuristiques classiques
 
 ## 🛠️ Technologies
 
@@ -52,7 +52,7 @@ job-shop-rl/
 ## 🚀 Installation
 ```bash
 # Cloner le repository
-git clone <votre-repo>
+git clone https://github.com/gbencheikh/RL_Job_Shop_Problem
 cd job-shop-rl
 
 # Créer l'environnement virtuel
@@ -88,7 +88,7 @@ python examples/evaluate.py --model results/models/best_model.pth
 - Comparaison avec heuristiques classiques (SPT, LPT, etc.)
 - Temps de calcul et qualité des solutions
 
-## 🎓 Concepts Clés - Reinforcement Learning
+## Concepts Clés - Reinforcement Learning
 
 ### État (State)
 - Opérations déjà ordonnancées
@@ -112,8 +112,35 @@ python examples/evaluate.py --model results/models/best_model.pth
 
 ## 👨‍💻 Auteur
 
-[Votre Nom]
+Ghita BENCHEIKH
 
+## 📊 Résultats Expérimentaux
+
+### Instance FT06 (6 jobs × 6 machines, optimal = 55)
+
+| Méthode | Makespan | Gap vs Optimal | Temps Calcul |
+|---------|----------|----------------|--------------|
+| Optimal (prouvé) | 55 | 0.00% | - |
+| **Deep DQN** | **69** | **25.45%** | ~15 min |
+| SPT Heuristic | 109 | 98.18% | < 1s |
+
+### Performance Deep DQN
+- Architecture: 128×128 réseau de neurones
+- Entraînement: 1000 épisodes
+- Device: CPU (PyTorch 2.9.0)
+- **Amélioration vs SPT: 36.7%**
+
+## 🚀 Utilisation
+
+### Entraîner Deep DQN sur FT06
+```bash
+python examples/train_deep_dqn.py
+```
+
+### Benchmark toutes les heuristiques
+```bash
+python examples/benchmark_all_instances.py
+```
 ## 📝 License
 
 MIT

@@ -16,7 +16,6 @@ from src.agents.PPO_agent import SimplePPOAgent
 from src.utils.visualization import GanttVisualizer
 from src.utils.notifier import * 
 
-
 def compare_agents(instance: JobShopInstance, num_runs: int = 5):
     """
     Compare DQN et PPO sur plusieurs runs.
