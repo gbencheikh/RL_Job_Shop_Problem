@@ -263,9 +263,43 @@ L = min(ratio × A, clip(ratio, 1-ε, 1+ε) × A)
 
 ---
 
-### 5. **Deep PPO** (À venir) 
+### 5. **Deep PPO** 
 
 PPO avec réseaux de neurones PyTorch.
+
+### 5. **Deep PPO** 🚀
+
+PPO avec réseaux de neurones PyTorch (Actor-Critic).
+```python
+from agents.deep_ppo_agent import DeepPPOAgent
+
+agent = DeepPPOAgent(
+    state_size=state_size,
+    action_size=action_size,
+    learning_rate=0.0003,
+    clip_epsilon=0.2,
+    use_shared_network=True
+)
+```
+
+#### Avantages vs DQN
+
+- ✅ Plus stable (clipped objective)
+- ✅ Meilleure exploration (stochastique)
+- ✅ Converge plus vite
+- ✅ Meilleurs résultats sur instances complexes
+
+#### Architecture Actor-Critic Partagée
+```
+Input (état)
+    ↓
+Shared Layers (128 → 128)
+    ↓
+    ├─→ Actor Head → Probabilités d'actions
+    └─→ Critic Head → Valeur V(s)
+```
+
+**Fichier** : `src/agents/deep_ppo_agent.py`
 
 ---
 
