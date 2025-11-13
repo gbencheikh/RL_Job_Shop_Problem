@@ -443,7 +443,7 @@ python examples/evaluate.py
 
 ### 5. Comparer DQN vs PPO
 ```bash
-python examples/compare_dqn_ppo.py
+python examples/compare_all.py
 ```
 
 ---
