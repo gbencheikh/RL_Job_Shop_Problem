@@ -11,8 +11,6 @@ from src.utils.visualization import GanttVisualizer, plot_training_curve
 import numpy as np
 from src.utils.notifier import * 
 
-
-from src.utils.notifier import * 
 # ============================================
 # FONCTION D'ENTRAÎNEMENT
 # ============================================

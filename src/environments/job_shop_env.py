@@ -14,7 +14,11 @@ from gymnasium import spaces
 import numpy as np
 from typing import Dict, List, Tuple, Optional
 from src.environments.job_shop_instance import JobShopInstance
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent / 'src'))
 
+from src.utils.notifier import *
 
 class JobShopEnv(gym.Env):
     """
@@ -249,10 +253,7 @@ class JobShopEnv(gym.Env):
 # ============================================
 
 if __name__ == "__main__":
-    print("=" * 60)
-    print("DÉMONSTRATION - Job Shop Environment")
-    print("=" * 60)
-    print()
+    section("DÉMONSTRATION - Job Shop Environment")
     
     # Créer une instance simple
     instance = JobShopInstance.create_simple_instance()
@@ -296,7 +297,7 @@ if __name__ == "__main__":
         
         if done:
             print(f"\n{'='*60}")
-            print(f"✅ Episode terminé !")
+            passed(f"Episode terminé !")
             print(f"Makespan final: {info['makespan']}")
             print(f"Récompense totale: {total_reward}")
             print(f"Nombre de steps: {step_count}")
