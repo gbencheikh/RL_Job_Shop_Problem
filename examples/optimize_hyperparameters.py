@@ -120,6 +120,5 @@ def main():
     
     success(f"Meilleure configuration:, results[0]['config']")
 
-
 if __name__ == "__main__":
     main()

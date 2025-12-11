@@ -13,7 +13,7 @@ from src.agents.deep_DQN_agent import DeepDQNAgent
 from src.utils.visualization import GanttVisualizer, plot_training_curve
 from src.utils.notifier import * 
 
-def generate_architecture_diagram():
+def generate_architecture_diagram_deep_DQN():
     """Génère le diagramme d'architecture du réseau DQN."""
     fig, ax = plt.subplots(figsize=(12, 8))
     ax.axis('off')
@@ -75,11 +75,140 @@ def generate_architecture_diagram():
     plt.xlim(0, 1)
     plt.ylim(0, 1)
     
-    save_path = Path(__file__).parent.parent.parent / 'results' / 'plots' / 'architecture_diagram.png'
+    save_path = Path(__file__).parent.parent.parent / 'results' / 'plots' / 'architecture_diagram_deep_DQN.png'
     plt.savefig(str(save_path), dpi=300, bbox_inches='tight')
     saved(f"Architecture diagram saved", save_path)
     plt.close()
 
+def generate_architecture_diagram_deep_PPO(
+    state_size: int,
+    action_size: int,
+    hidden_size: int = 128,
+    use_shared_network: bool = True,
+    learning_rate: float = 0.0003,
+    gamma: float = 0.99,
+    gae_lambda: float = 0.95,
+    clip_epsilon: float = 0.2,
+    value_coef: float = 0.5,
+    entropy_coef: float = 0.01,
+    update_epochs: int = 4,
+    batch_size: int = 64,
+    save_filename: str = 'architecture_diagram_deep_PPO.png'):
+    """
+    Génère et sauvegarde un diagramme d'architecture pour l'agent DeepPPO.
+
+    Args:
+        state_size: dimension de l'état (utilisé uniquement pour annotation)
+        action_size: nombre d'actions (taille de la sortie actor)
+        hidden_size: taille des couches cachées partagées / individuelles
+        use_shared_network: dessiner l'architecture partagée Actor-Critic si True,
+                            sinon dessiner Actor et Critic séparés.
+        hyperparams...: valeurs affichées dans le bloc d'info
+        save_filename: nom du fichier image de sortie
+    """
+    fig, ax = plt.subplots(figsize=(14, 8))
+    ax.axis('off')
+
+    title = "Architecture Proximal Policy Optimization (PPO)\nActor-Critic"
+    ax.text(0.5, 0.95, title, ha='center', fontsize=20, fontweight='bold')
+
+    # positions horizontales des blocs
+    left = 0.06
+    mid = 0.42
+    right = 0.78
+
+    box_w = 0.24
+    box_h = 0.10
+
+    def draw_box(x_center, y_center, label, color='lightblue', fontsize=11):
+        rect = plt.Rectangle((x_center - box_w/2, y_center - box_h/2),
+                             box_w, box_h, facecolor=color, edgecolor='black', linewidth=2)
+        ax.add_patch(rect)
+        ax.text(x_center, y_center, label, ha='center', va='center', fontsize=fontsize, fontweight='bold')
+
+    # Input state
+    draw_box(left, 0.65, f"Input\n(state size = {state_size})", color='lightsteelblue')
+
+    if use_shared_network:
+        # Shared feature extractor
+        draw_box(mid, 0.75, f"Shared\nLinear({hidden_size})\nReLU", color='lightgreen')
+        draw_box(mid, 0.58, f"Shared\nLinear({hidden_size})\nReLU", color='lightgreen')
+
+        # Actor head
+        draw_box(right, 0.75, f"Actor head\nLinear({hidden_size})\nLogits -> Softmax\n(action_size={action_size})", color='lightcoral', fontsize=10)
+        # Critic head
+        draw_box(right, 0.55, f"Critic head\nLinear({hidden_size})\nValue V(s)", color='khaki', fontsize=11)
+
+        # arrows
+        ax.annotate('', xy=(mid + box_w/2, 0.75), xytext=(right - box_w/2, 0.75),
+                   arrowprops=dict(arrowstyle='->', lw=2))
+        ax.annotate('', xy=(mid + box_w/2, 0.58), xytext=(right - box_w/2, 0.55),
+                   arrowprops=dict(arrowstyle='->', lw=2))
+        ax.annotate('', xy=(left + box_w/2, 0.65), xytext=(mid - box_w/2, 0.75),
+                   arrowprops=dict(arrowstyle='->', lw=2))
+
+        # outputs annotations
+        ax.text(right + 0.08, 0.75, "π(a|s)\n(probas)", ha='left', va='center', fontsize=10, style='italic')
+        ax.text(right + 0.08, 0.55, "V(s)\n(state value)", ha='left', va='center', fontsize=10, style='italic')
+
+    else:
+        # Actor branch
+        draw_box(mid, 0.78, f"Actor\nLinear({hidden_size})\nReLU\nLinear({hidden_size})\nLogits", color='lightcoral', fontsize=10)
+        draw_box(right, 0.78, f"Softmax\nπ(a|s)\n(action_size={action_size})", color='lightpink', fontsize=11)
+        # Critic branch
+        draw_box(mid, 0.48, f"Critic\nLinear({hidden_size})\nReLU\nLinear({hidden_size})\nValue", color='khaki', fontsize=10)
+        draw_box(right, 0.48, "V(s)\n(state value)", color='lightyellow', fontsize=11)
+
+        # arrows
+        ax.annotate('', xy=(left + box_w/2, 0.65), xytext=(mid - box_w/2, 0.78),
+                   arrowprops=dict(arrowstyle='->', lw=2))
+        ax.annotate('', xy=(mid + box_w/2, 0.78), xytext=(right - box_w/2, 0.78),
+                   arrowprops=dict(arrowstyle='->', lw=2))
+
+        ax.annotate('', xy=(left + box_w/2, 0.65), xytext=(mid - box_w/2, 0.48),
+                   arrowprops=dict(arrowstyle='->', lw=2))
+        ax.annotate('', xy=(mid + box_w/2, 0.48), xytext=(right - box_w/2, 0.48),
+                   arrowprops=dict(arrowstyle='->', lw=2))
+
+    # Annotations contextuelles
+    ax.text(0.06, 0.35, 'État observé\n(job progress, machine times, routing info, ...)', ha='left', fontsize=10, style='italic')
+    ax.text(0.06, 0.28, 'Sorties Actor/Critic utilisées pour :\n- échantillonnage d\'action stochastique\n- calcul des advantages (GAE)\n- mise à jour PPO (clipping)', ha='left', fontsize=10)
+
+    # Hyperparams block
+    info_lines = [
+        f"Hyperparamètres (exemple):",
+        f"• lr = {learning_rate}",
+        f"• γ = {gamma}, λ = {gae_lambda}",
+        f"• clip ε = {clip_epsilon}",
+        f"• value_coef = {value_coef}, entropy_coef = {entropy_coef}",
+        f"• update_epochs = {update_epochs}, batch_size = {batch_size}"
+    ]
+    info_text = "\n".join(info_lines)
+    ax.text(0.5, 0.08, info_text, ha='center', fontsize=11,
+            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.6))
+
+    plt.xlim(0, 1)
+    plt.ylim(0, 1)
+
+    # Save
+    try:
+        save_path = Path(__file__).parent.parent.parent / 'results' / 'plots' / save_filename
+    except Exception:
+        # Fallback si __file__ indisponible (ex: notebook)
+        save_path = Path.cwd() / 'results' / 'plots' / save_filename
+
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(str(save_path), dpi=300, bbox_inches='tight')
+    plt.close()
+
+    # tenter d'utiliser saved/notify si disponibles (comme dans ton projet)
+    try:
+        saved("Architecture diagram PPO saved", save_path)
+    except Exception:
+        # si saved non défini, affichage console
+        print(f"Architecture diagram saved: {save_path}")
+
+    return str(save_path)
 
 def generate_comparison_table_image():
     """Génère une image du tableau de comparaison."""
